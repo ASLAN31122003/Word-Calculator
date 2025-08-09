@@ -41,7 +41,7 @@ Type your query in words and click **Answer**. Use **Stop/Clear** to halt output
   
 ### Project Demo  
 **Video:**  
-*(Add YouTube or drive link demonstrating usage)*  
+[Word Calculator.webm](https://github.com/user-attachments/assets/6ff85f36-64c3-4720-ac4f-93c4fb0b623e)
 
 ## Team Contributions  
 - Alan Thomas Johnson: Developed main word parser, Sound Integration, Meme Integration 
