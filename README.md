@@ -40,8 +40,7 @@ Type your query in words and click **Answer**. Use **Stop/Clear** to halt output
 <img width="343" height="418" alt="image" src="https://github.com/user-attachments/assets/12ab5c11-6547-4c95-b886-db609601a5c6" />
   
 ### Project Demo  
-**Video:**  
-[Word Calculator](https://github.com/user-attachments/assets/6ff85f36-64c3-4720-ac4f-93c4fb0b623e)
+**Video:**  [Word Calculator](https://github.com/user-attachments/assets/6ff85f36-64c3-4720-ac4f-93c4fb0b623e)
 
 **Website:**
 [Word Calculator](https://aslan31122003.github.io/Word-Calculator/)
