@@ -44,8 +44,8 @@ Type your query in words and click **Answer**. Use **Stop/Clear** to halt output
 *(Add YouTube or drive link demonstrating usage)*  
 
 ## Team Contributions  
-- Alan Thomas Johnson: Developed main word parser, UI, and sound integration  
-- Nikhil Thomas: Meme API integration, sarcasm text banks, testing  
+- Alan Thomas Johnson: Developed main word parser, Sound Integration, Meme Integration 
+- Nikhil Thomas: Sarcasm text banks, UI, Testing  
 
 ---  
 Made with ❤️ at TinkerHub Useless Projects  
