@@ -37,7 +37,7 @@ Type your query in words and click **Answer**. Use **Stop/Clear** to halt output
 *The main UI showing input, controls, and the streaming word output area.*
 
 #### Diagrams  
-<img width="687" height="836" alt="image" src="https://github.com/user-attachments/assets/12ab5c11-6547-4c95-b886-db609601a5c6" />
+<img width="687/2" height="836/2" alt="image" src="https://github.com/user-attachments/assets/12ab5c11-6547-4c95-b886-db609601a5c6" />
   
 ### Project Demo  
 **Video:**  
