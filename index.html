@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Word Calculator</title>
+<style>
+  :root{
+    --bg:#121212;
+    --panel:#1e1e1e;
+    --accent:#00bfff;
+    --muted:#99a;
+    --text:#e0e0e0;
+    --card-shadow:0 6px 20px rgba(0,0,0,0.4);
+    --border-color:#333;
+  }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    margin:0; padding:28px;
+    display:flex; justify-content:center;
+    line-height:1.6;
+  }
+  .wrap{ width:100%; max-width:1080px; }
+  h1{
+    color:var(--accent);
+    margin:0 0 12px;
+    font-size:28px;
+    text-align:center;
+    font-weight:600;
+    letter-spacing:1px;
+  }
+  .panel{
+    background:var(--panel);
+    padding:24px;
+    border-radius:16px;
+    box-shadow:var(--card-shadow);
+    border:1px solid var(--border-color);
+  }
+  .instructions{
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:18px;
+    background:rgba(255,255,255,0.03);
+    padding:15px;
+    border-radius:10px;
+    border-left:4px solid var(--accent);
+  }
+  .instructions strong{ color:var(--text); }
+  .instructions ul{ margin:8px 0 0 20px; padding:0; font-size:13px; list-style-type:disc; }
+  .instructions li{ margin-bottom:5px; }
+
+  .controls{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+    align-items:center;
+    justify-content:center;
+  }
+  input[type="text"]{
+    padding:14px 18px;
+    flex-grow:1;
+    min-width:280px;
+    border-radius:10px;
+    border:1px solid var(--border-color);
+    background:#0a0a0a;
+    color:var(--text);
+    font-size:16px;
+    transition:border-color 0.3s;
+  }
+  input[type="text"]:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  button{
+    padding:12px 20px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    font-weight:700;
+    font-size:15px;
+    transition:transform 0.1s, box-shadow 0.1s;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  }
+  button:active{
+    transform:translateY(2px);
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+  }
+  #answerBtn{ background:linear-gradient(180deg,var(--accent),#008bbf); color:white; }
+  #stopBtn{ background:linear-gradient(180deg,#ff7043,#e65a2e); color:white; }
+  #playBgm{ background:linear-gradient(180deg,#4caf50,#2e9b4e); color:white; }
+
+  .result-container{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    align-items:stretch;
+  }
+
+  #result{
+    flex:1;
+    min-width:300px;
+    min-height:180px;
+    padding:20px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.01);
+    font-weight:600;
+    color:#ffdd57;
+    font-size:20px;
+    text-align:left;
+    word-break:break-word;
+    max-height:450px;
+    overflow:auto;
+    border:1px solid var(--border-color);
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    display:flex;
+    align-items:center;
+  }
+  #meme{
+    flex:1;
+    min-width:200px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:rgba(0,0,0,0.1);
+    border-radius:12px;
+    padding:10px;
+    border:1px solid var(--border-color);
+  }
+  #meme img{
+    max-width:65%;
+    max-height:65%;
+    border-radius:8px;
+    object-fit:contain;
+    box-shadow:0 4px 15px rgba(0,0,0,0.5);
+  }
+  small.note{
+    color:#777;
+    display:block;
+    text-align:center;
+    margin-top:15px;
+    font-size:12px;
+  }
+  @media(max-width:768px){
+    .controls{ justify-content:center; }
+    input[type="text"]{ width:100%; min-width:unset; }
+    .result-container{ flex-direction:column; }
+    #result, #meme{ min-width:unset; }
+    #result{ font-size:18px; }
+    body{ padding:15px; }
+    h1{ font-size:24px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>Word Calculator</h1>
+
+      <div class="instructions">
+        <strong>Instructions</strong>
+        <ul style="margin:8px 0 0 18px; padding:0; font-size:13px;">
+          <li>Type numbers in words up to <b>one billion</b>. Examples: <code>one thousand two hundred</code>, <code>five million</code>.</li>
+          <li>Use operators: <code>plus</code>, <code>minus</code>, <code>into</code> / <code>times</code>, <code>divided by</code> / <code>over</code>.</li>
+          <li>Decimals: use <code>point</code> (e.g. <code>one point two three</code>).</li>
+          <li>Type exactly <code>pi</code> to get π (in words).</li>
+          <li>Use <b>Stop / Clear</b> to halt streaming.</li>
+        </ul>
+      </div>
+
+      <div class="controls">
+        <input id="input" type="text" placeholder='e.g. "thousand divided by three" or "pi"'>
+        <button id="answerBtn">Answer</button>
+        <button id="stopBtn">Stop / Clear</button>
+        <button id="playBgm">Click / Click</button>
+      </div>
+
+      <div class="result-container">
+        <div id="result">— result will appear here —</div>
+        <div id="meme"></div>
+      </div>
+      <small class="note">Made by some insane people for some insane people</small>
+    </div>
+  </div>
+
+  <audio id="bgm" loop crossorigin="anonymous">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3e2a0a8d9a.mp3?filename=peaceful-calm-ambient-110019.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="sfxClick" preload="auto" src="https://actions.google.com/sounds/v1/ui/click.ogg"></audio>
+  <audio id="sfxWord" preload="auto" src="https://actions.google.com/sounds/v1/foley/typewriter_key.ogg"></audio>
+  <audio id="sfxAnswer" preload="auto" src="https://actions.google.com/sounds/v1/alarms/medium_bell_ringing_near.ogg"></audio>
+
+<script>
+/* ------------------------
+   Robust parser & helpers
+   ------------------------ */
+const SMALL = {
+  "zero":0,"one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,"eight":8,"nine":9,
+  "ten":10,"eleven":11,"twelve":12,"thirteen":13,"fourteen":14,"fifteen":15,"sixteen":16,
+  "seventeen":17,"eighteen":18,"nineteen":19
+};
+const TENS = {"twenty":20,"thirty":30,"forty":40,"fifty":50,"sixty":60,"seventy":70,"eighty":80,"ninety":90};
+const SCALE = {"hundred":100,"thousand":1000,"million":1000000,"billion":1000000000};
+const DIGIT_WORD = ["zero","one","two","three","four","five","six","seven","eight","nine"];
+
+// Sarcasm banks
+const GRAMMAR_SARCASM = [
+  "Go learn English.",
+  "Who taught you English?",
+  "Even my toaster speaks better grammar.",
+  "You’ve broken the English language, congratulations.",
+  "I’m not sure if you’re trying to do math or write a novel.",
+  "This is not how you use a calculator.",
+  "Did you just invent a new language?",
+  "I’m impressed by your creativity, but this is not a word game.",
+  "I’m not sure if you’re asking for math help or a grammar lesson.",
+  "This is not a math problem, it’s a grammar disaster.",
+  "I’m not sure if you’re trying to do math or write a poem.",
+  "Wow, your spelling is so creative, even the dictionary is confused.",
+  "Grammar police just issued an arrest warrant for this equation.",
+  "I’d fix your grammar, but it’s a lost cause at this point.",
+  "Math is hard… spelling is harder… apparently both are impossible for you."
+  
+];
+const GENERAL_SARCASM = [
+  "Wow — you really needed me for that?",
+  "I hope you’re proud of this.",
+  "You could've just guessed.",
+  "Are we doing kindergarten math now?",
+  "This is the best you could come up with?",
+  "This is peak human brilliance (not).",
+  "I’m not sure if I should laugh or cry.",
+  "This is the pinnacle of human achievement",
+  "Congratulations, you’ve reached a new low.",  
+  "This is not how you use a calculator.",
+  "Hmm… I could solve that… but I won’t",
+  "Calculating… just kidding, I don’t feel like it.",
+  "This is the most useless calculation I’ve ever seen.",
+  "Your math request has been forwarded to my manager. Expect a reply in 3–5 business years."
+
+];
+
+/* parse integer words (returns integer or null on unknown token) */
+function parseIntegerWords(phrase) {
+  if (!phrase) return 0;
+  const toks = phrase.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if (toks.length === 0) return 0;
+  let total = 0, current = 0;
+  for (let tok of toks) {
+    if (SMALL.hasOwnProperty(tok)) current += SMALL[tok];
+    else if (TENS.hasOwnProperty(tok)) current += TENS[tok];
+    else if (tok === "and") continue;
+    else if (SCALE.hasOwnProperty(tok)) {
+      const sc = SCALE[tok];
+      if (sc === 100) {
+        if (current === 0) current = 1;
+        current *= 100;
+      } else {
+        if (current === 0) current = 1;
+        current *= sc;
+        total += current;
+        current = 0;
+      }
+    } else {
+      return null;
+    }
+    if (total + current > 1_000_000_000) return null;
+  }
+  return total + current;
+}
+
+/* parse a word-number possibly with "point" fractional single-digit words */
+function parseWordNumber(phrase) {
+  if (!phrase) return null;
+  phrase = phrase.trim().toLowerCase();
+  if (phrase === "pi") return null; // handled separately
+  if (/\d/.test(phrase)) return null; // disallow raw digits
+  const parts = phrase.split(/\s+point\s+/);
+  const intPart = parts[0].trim();
+  const fracPart = parts[1] ? parts[1].trim() : null;
+  const intVal = parseIntegerWords(intPart);
+  if (intVal === null) return null;
+  if (!fracPart) return intVal;
+  const fracToks = fracPart.split(/\s+/).filter(Boolean);
+  if (fracToks.length === 0) return intVal;
+  let fracDigits = "";
+  for (let t of fracToks) {
+    if (!SMALL.hasOwnProperty(t)) return null;
+    fracDigits += String(SMALL[t]);
+  }
+  // return as Number (kept precise enough for scaling; we'll use BigInt for division)
+  return Number((intVal + Number("0." + fracDigits)).toFixed(12));
+}
+
+/* integer to words up to billion */
+function integerToWords(num) {
+  if (num === 0) return "zero";
+  if (num < 0) return "minus " + integerToWords(-num);
+  const ones = ["","one","two","three","four","five","six","seven","eight","nine","ten",
+                "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+  const tens = ["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+  let out = "";
+  if (num >= 1_000_000_000) {
+    const b = Math.floor(num / 1_000_000_000);
+    out += integerToWords(b) + " billion";
+    num %= 1_000_000_000;
+    if (num) out += " ";
+  }
+  if (num >= 1_000_000) {
+    const m = Math.floor(num / 1_000_000);
+    out += integerToWords(m) + " million";
+    num %= 1_000_000;
+    if (num) out += " ";
+  }
+  if (num >= 1000) {
+    const t = Math.floor(num / 1000);
+    out += integerToWords(t) + " thousand";
+    num %= 1000;
+    if (num) out += " ";
+  }
+  if (num >= 100) {
+    const h = Math.floor(num / 100);
+    out += integerToWords(h) + " hundred";
+    num %= 100;
+    if (num) out += " ";
+  }
+  if (num >= 20) {
+    const tv = Math.floor(num/10);
+    out += tens[tv];
+    if (num % 10) out += " " + ones[num % 10];
+  } else if (num > 0) out += ones[num];
+  return out.trim();
+}
+
+/* long division with BigInt for accurate decimals up to maxDigits */
+function longDivisionBigInt(numeratorBig, denominatorBig, maxDigits=200) {
+  const intPart = numeratorBig / denominatorBig;
+  let remainder = numeratorBig % denominatorBig;
+  const decimals = [];
+  for (let i=0;i<maxDigits;i++) {
+    remainder *= 10n;
+    const d = remainder / denominatorBig;
+    decimals.push(Number(d)); // digit 0..9
+    remainder = remainder % denominatorBig;
+  }
+  return { intPart: Number(intPart), decimals };
+}
+
+/* helper to scale floats returned by parser to integers (BigInt) */
+function scaleToIntegersForDivision(leftVal, rightVal, maxScale=12) {
+  // We parse word numbers with up to 12 fractional digits
+  const leftStr = String(leftVal);
+  const rightStr = String(rightVal);
+  const leftDec = (leftStr.includes(".") ? leftStr.split(".")[1].length : 0);
+  const rightDec = (rightStr.includes(".") ? rightStr.split(".")[1].length : 0);
+  const scale = Math.max(leftDec, rightDec, 0); // At least 0
+  const factor = BigInt(10) ** BigInt(scale);
+  const numer = BigInt(Math.round(leftVal * Number(factor)));
+  const denom = BigInt(Math.round(rightVal * Number(factor)));
+  return { numer, denom, scale };
+}
+
+/* new high-precision calculation for plus, minus, multiply */
+function highPrecisionCalculation(leftVal, rightVal, op) {
+  const { numer: numerA, denom: denomA, scale: scaleA } = scaleToIntegersForDivision(leftVal, 1, 12);
+  const { numer: numerB, denom: denomB, scale: scaleB } = scaleToIntegersForDivision(rightVal, 1, 12);
+  
+  const maxScale = Math.max(scaleA, scaleB);
+  const factorA = BigInt(10) ** BigInt(maxScale - scaleA);
+  const factorB = BigInt(10) ** BigInt(maxScale - scaleB);
+
+  let resultNumer;
+  if (op === "plus") {
+    resultNumer = (numerA * factorA) + (numerB * factorB);
+  } else if (op === "minus") {
+    resultNumer = (numerA * factorA) - (numerB * factorB);
+  } else if (op === "multiply") {
+    // For multiplication, the scale adds up. We need a different scale factor for the final division.
+    const combinedScale = scaleA + scaleB;
+    const combinedFactor = BigInt(10) ** BigInt(combinedScale);
+    const product = numerA * numerB;
+    return longDivisionBigInt(product, combinedFactor, 200);
+  }
+  
+  const resultDenom = BigInt(10) ** BigInt(maxScale);
+  return longDivisionBigInt(resultNumer, resultDenom, 200);
+}
+
+/* operator detection */
+function findOperatorAndSplit(input) {
+  const s = input.trim().toLowerCase().replace(/\s+/g," ");
+  const multi = ["divided by","over"];
+  for (let op of multi) {
+    const idx = s.indexOf(op);
+    if (idx >= 0) {
+      const left = s.slice(0, idx).trim();
+      const right = s.slice(idx + op.length).trim();
+      return { op: "divided", left, right };
+    }
+  }
+  const singles = [
+    {k:" plus ", op:"plus"},
+    {k:" minus ", op:"minus"},
+    {k:" into ", op:"multiply"},
+    {k:" times ", op:"multiply"}
+  ];
+  for (let o of singles) {
+    const idx = s.indexOf(o.k);
+    if (idx >= 0) {
+      const left = s.slice(0, idx).trim();
+      const right = s.slice(idx + o.k.length).trim();
+      return { op: o.op, left, right };
+    }
+  }
+  return null;
+}
+
+/* meme loader using meme-api.com with fallback */
+const FALLBACK_GIFS = [
+  "https://i.imgur.com/jl3t6yT.gif",
+  "https://i.imgur.com/6P4L8B3.gif",
+  "https://i.imgur.com/fY7ZV7y.gif"
+];
+async function loadMeme() {
+  const container = document.getElementById("meme");
+  container.innerHTML = "";
+  try {
+    const res = await fetch("https://meme-api.com/gimme");
+    if (!res.ok) throw new Error("meme fail");
+    const j = await res.json();
+    const url = j.url || j.image || j.preview || null;
+    if (url) {
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "meme";
+      container.appendChild(img);
+      return;
+    }
+  } catch(e) {
+    const img = document.createElement("img");
+    img.src = FALLBACK_GIFS[Math.floor(Math.random()*FALLBACK_GIFS.length)];
+    container.appendChild(img);
+  }
+}
+
+/* PI 200 digits (after decimal) */
+const PI_200 = "14159265358979323846264338327950288419716939937510"+
+"58209749445923078164062862089986280348253421170679"+
+"82148086513282306647093844609550582231725359408128"+
+"48111745028410270193852110555964462294895493038196"+
+"44288109756659334461284756482337867831652712019091";
+
+/* ---------------------------
+   Word-by-word streaming (medium speed)
+   --------------------------- */
+let streamTimer = null;
+const MEDIUM_MS = 250; // medium speed per-word
+
+function stopStream() {
+  if (streamTimer) { clearInterval(streamTimer); streamTimer = null; }
+}
+
+/* stream words array */
+function streamWords(words, playSfxPerWord=true, onDone=null) {
+  stopStream();
+  const out = document.getElementById("result");
+  out.textContent = "";
+  let i = 0;
+  const sfxWord = document.getElementById("sfxWord");
+  streamTimer = setInterval(() => {
+    if (i >= words.length) {
+      stopStream();
+      // play final sfx
+      const sfxAnswer = document.getElementById("sfxAnswer");
+      sfxAnswer.currentTime = 0; sfxAnswer.play().catch(()=>{});
+      if (onDone) onDone();
+      return;
+    }
+    // append next word
+    out.textContent += (out.textContent ? " " : "") + words[i];
+    if (playSfxPerWord) {
+      // small per-word click/typing sound
+      sfxWord.currentTime = 0; sfxWord.play().catch(()=>{});
+    }
+    i++;
+    // scroll result container into view if overflow
+    out.scrollTop = out.scrollHeight;
+  }, MEDIUM_MS);
+}
+
+/* helper: convert integer & decimals array into word sequence */
+function decimalArrayToWordsSeq(intPart, decimalsArray, decimalCount=200) {
+  const seq = [];
+  const intWords = integerToWords(intPart).split(/\s+/).filter(Boolean);
+  seq.push(...intWords);
+  if (decimalsArray && decimalsArray.length > 0) {
+    seq.push("point");
+    const dec = decimalsArray.slice(0, decimalCount);
+    for (let d of dec) seq.push(DIGIT_WORD[d]);
+  }
+  return seq;
+}
+
+/* ---------------------------
+   Main handler
+   --------------------------- */
+document.getElementById("answerBtn").addEventListener("click", handleAnswer);
+document.getElementById("stopBtn").addEventListener("click", () => {
+  stopStream();
+  document.getElementById("result").textContent = "— result will appear here —";
+  document.getElementById("meme").innerHTML = "";
+});
+document.getElementById("playBgm").addEventListener("click", () => {
+  const bgm = document.getElementById("bgm");
+  if (bgm.paused) bgm.play().catch(()=>{}), document.getElementById("playBgm").textContent = "Click";
+  else bgm.pause(), document.getElementById("playBgm").textContent = "Click";
+});
+document.getElementById("input").addEventListener("keydown",(e)=>{ if (e.key==="Enter"){ e.preventDefault(); handleAnswer(); }});
+
+/* play click SFX (button) */
+function playClick() {
+  const sfxClick = document.getElementById("sfxClick");
+  sfxClick.currentTime = 0; sfxClick.play().catch(()=>{});
+}
+
+/* call handleAnswer with click sound */
+async function handleAnswer() {
+  playClick();
+  stopStream();
+  document.getElementById("meme").innerHTML = "";
+  const raw = (document.getElementById("input").value || "").trim();
+  const outEl = document.getElementById("result");
+  outEl.textContent = "";
+
+  if (!raw) {
+    const msg = GRAMMAR_SARCASM[Math.floor(Math.random()*GRAMMAR_SARCASM.length)];
+    streamWords([msg], true, async ()=>{ await loadMeme(); });
+    return;
+  }
+
+  const lower = raw.toLowerCase().replace(/\s+/g," ").trim();
+
+  // pi special-case
+  if (lower === "pi") {
+    // grammar ok -> 50:50 correct vs general sarcasm
+    if (Math.random() < 0.5) {
+      const seq = ["three","point", ...PI_200.split("").map(d => DIGIT_WORD[Number(d)])];
+      streamWords(seq);
+      return;
+    } else {
+      const g = GENERAL_SARCASM[Math.floor(Math.random()*GENERAL_SARCASM.length)];
+      streamWords([g], true, async ()=>{ await loadMeme(); });
+      return;
+    }
+  }
+
+  // find operator
+  const opInfo = findOperatorAndSplit(lower);
+  if (!opInfo) {
+    const msg = GRAMMAR_SARCASM[Math.floor(Math.random()*GRAMMAR_SARCASM.length)];
+    streamWords([msg], true, async ()=>{ await loadMeme(); });
+    return;
+  }
+
+  // parse numbers
+  const left = parseWordNumber(opInfo.left);
+  const right = parseWordNumber(opInfo.right);
+  if (left === null || right === null) {
+    const msg = GRAMMAR_SARCASM[Math.floor(Math.random()*GRAMMAR_SARCASM.length)];
+    streamWords([msg], true, async ()=>{ await loadMeme(); });
+    return;
+  }
+
+  // valid grammar: 50% correct, 50% general sarcasm
+  if (Math.random() < 0.5) {
+    // correct answer path
+    if (opInfo.op === "plus") {
+      const { intPart, decimals } = highPrecisionCalculation(left, right, "plus");
+      streamWords(decimalArrayToWordsSeq(intPart, decimals, 200));
+      return;
+    } else if (opInfo.op === "minus") {
+      const { intPart, decimals } = highPrecisionCalculation(left, right, "minus");
+      streamWords(decimalArrayToWordsSeq(intPart, decimals, 200));
+      return;
+    } else if (opInfo.op === "multiply") {
+      const { intPart, decimals } = highPrecisionCalculation(left, right, "multiply");
+      streamWords(decimalArrayToWordsSeq(intPart, decimals, 200));
+      return;
+    } else if (opInfo.op === "divided") {
+      if (right === 0) {
+        const msg = "Division by zero. " + GRAMMAR_SARCASM[Math.floor(Math.random()*GRAMMAR_SARCASM.length)];
+        streamWords([msg], true, async ()=>{ await loadMeme(); });
+        return;
+      }
+      // scale numbers to integers using their parsed decimal length
+      const { numer, denom } = scaleToIntegersForDivision(left, right, 12);
+      // perform long division with BigInt for up to 200 digits
+      const { intPart, decimals } = longDivisionBigInt(numer, denom, 200);
+      const seq = decimalArrayToWordsSeq(intPart, decimals, 200);
+      streamWords(seq);
+      return;
+    }
+  } else {
+    // general sarcasm path
+    const g = GENERAL_SARCASM[Math.floor(Math.random()*GENERAL_SARCASM.length)];
+    streamWords([g], true, async ()=>{ await loadMeme(); });
+    return;
+  }
+}
+
+/* initial UI: set button sfx behavior */
+document.getElementById("answerBtn").addEventListener("click", ()=>{ /* handled above */ });
+document.getElementById("answerBtn").addEventListener("mousedown", ()=>{ playClick(); });
+
+/* ensure bgm doesn't autoplay silently blocked: set button text accordingly */
+document.getElementById("playBgm").textContent = "Click / Click";
+
+/* small safety: if user closes/stop, clear stream */
+window.addEventListener("beforeunload", () => { stopStream(); });
+
+</script>
+</body>
+</html>
