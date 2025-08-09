@@ -1,2 +1,54 @@
-# Word-Calculator
-A sarcastic word-based calculator that gives 50% accurate answers, streams results word-by-word with sound effects, and shows random memes — built for the ThinkerHub Useless Project challenge.
+# Word Calculator 🎯
+
+## Basic Details  
+### Team Name: Lost_Souls  
+
+### Team Members  
+- Team Lead: Alan Thomas Johnson – College of Engineering Kallooppara  
+- Member 2: Nikhil Thomas – College of Engineering Kallooppara  
+
+### Project Description  
+A quirky calculator that takes numbers typed in words, performs basic math operations, and streams results word-by-word with sounds. Half the time it answers correctly, the other half it serves sarcasm and memes.  
+
+### The Problem (that doesn't exist)  
+People need a calculator that’s just as confused as they are when typing numbers in words — and with a healthy dose of sarcasm for bad inputs.  
+
+### The Solution (that nobody asked for)  
+An overly elaborate word-based calculator that gives half-accurate results, roasts your grammar, and entertains you with memes and sound effects while slowly spelling out the answer.  
+
+## Technical Details  
+### Technologies/Components Used  
+**Software:**  
+- HTML, CSS, JavaScript  
+- Fetch API for memes  
+- Audio API for sounds  
+
+### Implementation  
+**Installation**  
+Just open the `index.html` in any modern browser — no installation needed.  
+
+**Run**  
+Type your query in words and click **Answer**. Use **Stop/Clear** to halt output. Toggle background music with **Play/Pause BGM**.  
+
+### Project Documentation  
+
+#### Screenshots  
+![Calculator UI](https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7)  
+*The main UI showing input, controls, and the streaming word output area.*
+
+#### Diagrams  
+*(Optional: Add workflow diagram if any)*  
+
+### Project Demo  
+**Video:**  
+*(Add YouTube or drive link demonstrating usage)*  
+
+## Team Contributions  
+- Alan Thomas Johnson: Developed main word parser, UI, and sound integration  
+- Nikhil Thomas: Meme API integration, sarcasm text banks, testing  
+
+---  
+Made with ❤️ at TinkerHub Useless Projects  
+
+![Static Badge](https://img.shields.io/badge/TinkerHub-24?color=%23000000&link=https%3A%2F%2Fwww.tinkerhub.org%2F)  
+![Static Badge](https://img.shields.io/badge/UselessProjects--25-25?link=https%3A%2F%2Fwww.tinkerhub.org%2Fevents%2FQ2Q1TQKX6Q%2FUseless%2520Projects)  
