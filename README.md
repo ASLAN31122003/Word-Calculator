@@ -33,7 +33,7 @@ Type your query in words and click **Answer**. Use **Stop/Clear** to halt output
 ### Project Documentation  
 
 #### Screenshots  
-![Calculator UI](<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/877b0a95-dc2c-4683-b5be-5a162656b290" />
+![Calculator UI](<img width="900" height="339" alt="image" src="https://github.com/user-attachments/assets/877b0a95-dc2c-4683-b5be-5a162656b290" />
 )  
 *The main UI showing input, controls, and the streaming word output area.*
 
